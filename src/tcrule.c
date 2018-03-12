@@ -36,9 +36,10 @@ int tcrule_init(char *devname, int rate)
     /*
      * some module need to require
      */
-    system("insmod htb");
+    system("insmod sch_htb");
     system("insmod ifb numifbs=2");
-    system("insmod sfq");
+    system("insmod sch_sfq");
+    system("insmod u32");
     /*
      * engress queue 
      */
@@ -56,9 +57,9 @@ int tcrule_init(char *devname, int rate)
 
 int tc_class_add(char *devname, int index, int rate)
 {
-    tc_command("class add dev %s parent 1: classid 1:%d htb rate %dmbit burst %dk", devname, index, rate, rate / 10);
+    tc_command("class add dev %s parent 1: classid 1:%d htb rate %dmbit burst %dk", devname, index, rate, rate * 10);
 
-    tc_command("class add dev ifb0 parent 1: classid 1:%d htb rate %dmbit burst %dk", index, rate, rate / 10);
+    tc_command("class add dev ifb0 parent 1: classid 1:%d htb rate %dmbit burst %dk", index, rate, rate * 10);
 
     return 0;
 }
