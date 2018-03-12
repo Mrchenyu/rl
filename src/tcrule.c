@@ -39,7 +39,8 @@ int tcrule_init(char *devname, int rate)
     system("insmod sch_htb");
     system("insmod ifb numifbs=2");
     system("insmod sch_sfq");
-    system("insmod u32");
+    system("insmod cls_u32");
+    system("insmod sch_prio");
     /*
      * engress queue 
      */
@@ -94,7 +95,10 @@ int tcrule_del(char *devname, char *mac_addr)
     tc_command("qdisc del dev ifb0");
 
     system("rmmod ifb");
-    system("rmmod htb");
+    system("rmmod sch_htb");
+    system("rmmod sch_sfq");
+    system("rmmod cls_u32");
+    system("rmmod sch_prio");
 
     return 0;
 }
