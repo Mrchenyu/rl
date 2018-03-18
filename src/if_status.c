@@ -53,3 +53,22 @@ int get_system_value(char * cmd, char * value)
 
     return 0;
 }
+
+int get_if_ip(char *iface, char *ip)
+{
+	struct ifreq ifr;
+	int fd = 0;
+
+	memset(&ifr, 0, sizeof(struct ifreq));
+
+	fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+	strcpy(ifr.ifr_name, iface);
+	if (ioctl(fd, SIOCGIFADDR, &ifr) == 0)
+	{
+		struct sockaddr_in *x = (struct sockaddr_in *) &ifr.ifr_addr;
+		strcpy(ip, inet_ntoa(x->sin_addr));
+		return 1;
+	}
+	else
+		return 0;
+}
